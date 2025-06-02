@@ -13,20 +13,24 @@ def generate_message():
     )
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "HTTP-Referer": "https://github.com",  # İstersen GitHub linkini gir
+        "HTTP-Referer": "https://github.com",  # Gerçek repo linkini verebilirsin
         "Content-Type": "application/json"
     }
     json_data = {
-        "model": "mistralai/mixtral-8x7b",  # Daha stabil, önerilen model
+        "model": "mistralai/mixtral-8x7b-instruct",  # ✅ Doğru model adı
         "messages": [
             {"role": "user", "content": prompt}
         ]
     }
     response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=json_data)
 
-    print(response.json())  # ✅ Bu satır şimdi doğru girintili
+    response_data = response.json()
+    print(response_data)  # Yanıtı incelemek için
 
-    return response.json()['choices'][0]['message']['content'].strip()
+    if "choices" not in response_data:
+        raise ValueError(f"Beklenmeyen API yanıtı: {response_data}")
+
+    return response_data['choices'][0]['message']['content'].strip()
 
 # Slack'e mesaj gönder
 def send_message_to_slack(text):
