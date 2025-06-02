@@ -17,7 +17,7 @@ def generate_message():
         "Content-Type": "application/json"
     }
     json_data = {
-        "model": "openchat/openchat-3.5",  # Daha stabil, önerilen model
+        "model": "mistralai/mixtral-8x7b",  # Daha stabil, önerilen model
         "messages": [
             {"role": "user", "content": prompt}
         ]
