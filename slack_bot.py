@@ -2,32 +2,28 @@ import requests
 import openai
 import os
 
-# Ortam değişkenleri
+# API anahtarları
 SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
 SLACK_CHANNEL_ID = os.environ["SLACK_CHANNEL_ID"]
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 
-# OpenAI API yapılandırması
 openai.api_key = OPENAI_API_KEY
 
-# Yapay zeka mesajı üret
 def generate_message():
     prompt = (
-        "Bir yazılımcının gözünden, sabah Slack kanalında paylaşılacak espirili, Türkçe, kısa ve yaratıcı bir günaydın mesajı yaz. "
-        "Kod, bug, commit, kahve gibi konulara gönderme yapılabilir. Samimi, doğal ve hafif mizahi olsun."
+        "Türkçe, yazılımcı bakış açısıyla, Slack kanalında paylaşılacak espirili, kısa ve yaratıcı bir günaydın mesajı yaz. "
+        "Kod, bug, commit, kahve gibi terimlere göndermeler olabilir. 1-2 cümle yeterlidir."
     )
+
     response = openai.ChatCompletion.create(
-        model="gpt-4o",  # gpt-4o varsa, yoksa "gpt-4" da olur
-        messages=[
-            {"role": "user", "content": prompt}
-        ],
+        model="gpt-3.5-turbo",  # ✅ en ucuz model
+        messages=[{"role": "user", "content": prompt}],
         max_tokens=100,
         temperature=0.9
     )
 
     return response.choices[0].message["content"].strip()
 
-# Slack'e mesaj gönder
 def send_message_to_slack(text):
     url = "https://slack.com/api/chat.postMessage"
     headers = {
