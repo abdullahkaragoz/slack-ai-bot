@@ -2,14 +2,16 @@ name: Free AI Slack Bot
 
 on:
   schedule:
-    - cron: "0 5 * * *"  # Türkiye saatiyle 08:00 (UTC+3 = 5:00 UTC)
+    # Hafta içi her gün saat 05:00 UTC (Türkiye saatiyle 08:00)
+    - cron: "0 5 * * 1-5"
   workflow_dispatch:
 
 jobs:
   post_message:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -20,9 +22,8 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
-      - name: Run script
+      - name: Run Slack bot script
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: python slack_bot.py
