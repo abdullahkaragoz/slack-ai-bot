@@ -1,0 +1,47 @@
+import requests
+import os
+
+# Ortam değişkenleri
+SLACK_BOT_TOKEN = os.environ["xoxp-8967571839827-8967571843395-8983530150789-60ee0dad19af372fa356ebe13db910d3"]
+SLACK_CHANNEL_ID = os.environ["https://app.slack.com/client/T08UFGTQPQB/C08UFGTUXV1"]
+OPENROUTER_API_KEY = os.environ["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"]
+
+# Yapay zeka mesajı üret
+def generate_message():
+    prompt = (
+        "Bir yazılımcının gözünden, sabah Slack kanalında paylaşılacak espirili, Türkçe, kısa ve yaratıcı bir günaydın mesajı yaz. Kod, bug, kahve, vs. içerebilir."
+    )
+    headers = {
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "HTTP-Referer": "https://github.com",  # İstersen GitHub linkini gir
+        "Content-Type": "application/json"
+    }
+    json_data = {
+        "model": "mistralai/mixtral-8x7b",  # Ücretsiz model
+        "messages": [
+            {"role": "user", "content": prompt}
+        ]
+    }
+    response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=json_data)
+    return response.json()['choices'][0]['message']['content'].strip()
+
+# Slack'e mesaj gönder
+def send_message_to_slack(text):
+    url = "https://slack.com/api/chat.postMessage"
+    headers = {
+        "Authorization": f"Bearer {SLACK_BOT_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    data = {
+        "channel": SLACK_CHANNEL_ID,
+        "text": text
+    }
+    response = requests.post(url, headers=headers, json=data)
+    print(response.json())
+
+def main():
+    message = generate_message()
+    send_message_to_slack(message)
+
+if __name__ == "__main__":
+    main()
