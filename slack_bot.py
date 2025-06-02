@@ -1,28 +1,22 @@
 import requests
-import openai
 import os
+import json
+import random
 
 # API anahtarları
 SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
 SLACK_CHANNEL_ID = os.environ["SLACK_CHANNEL_ID"]
-OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 
-openai.api_key = OPENAI_API_KEY
+# JSON dosyasının yolu
+JOKES_JSON_PATH = "gunaydin_esprileri.json"
 
-def generate_message():
-    prompt = (
-        "Türkçe, yazılımcı bakış açısıyla, Slack kanalında paylaşılacak espirili, kısa ve yaratıcı bir günaydın mesajı yaz. "
-        "Kod, bug, commit, kahve gibi terimlere göndermeler olabilir. 1-2 cümle yeterlidir."
-    )
+def load_jokes_from_file(path):
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data.get("jokes", [])
 
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",  # ✅ en ucuz model
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=100,
-        temperature=0.9
-    )
-
-    return response.choices[0].message["content"].strip()
+def select_random_joke(jokes):
+    return random.choice(jokes)
 
 def send_message_to_slack(text):
     url = "https://slack.com/api/chat.postMessage"
@@ -38,8 +32,14 @@ def send_message_to_slack(text):
     print(response.json())
 
 def main():
-    message = generate_message()
-    send_message_to_slack(message)
+    try:
+        jokes = load_jokes_from_file(JOKES_JSON_PATH)
+        if not jokes:
+            raise ValueError("JSON içinde espri bulunamadı.")
+        message = select_random_joke(jokes)
+        send_message_to_slack(message)
+    except Exception as e:
+        print("Hata oluştu:", str(e))
 
 if __name__ == "__main__":
     main()
