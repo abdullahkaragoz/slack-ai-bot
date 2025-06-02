@@ -23,6 +23,7 @@ def generate_message():
         ]
     }
     response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=json_data)
+      print(response.json())
     return response.json()['choices'][0]['message']['content'].strip()
 
 # Slack'e mesaj gönder
