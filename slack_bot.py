@@ -17,13 +17,15 @@ def generate_message():
         "Content-Type": "application/json"
     }
     json_data = {
-        "model": "mistralai/mixtral-8x7b",  # Ücretsiz model
+        "model": "openchat/openchat-3.5",  # Daha stabil, önerilen model
         "messages": [
             {"role": "user", "content": prompt}
         ]
     }
     response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=json_data)
-      print(response.json())
+
+    print(response.json())  # ✅ Bu satır şimdi doğru girintili
+
     return response.json()['choices'][0]['message']['content'].strip()
 
 # Slack'e mesaj gönder
