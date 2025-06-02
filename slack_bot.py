@@ -3,7 +3,7 @@ import os
 
 # Ortam değişkenleri
 SLACK_BOT_TOKEN = os.environ["xoxp-8967571839827-8967571843395-8983530150789-60ee0dad19af372fa356ebe13db910d3"]
-SLACK_CHANNEL_ID = os.environ["https://app.slack.com/client/T08UFGTQPQB/C08UFGTUXV1"]
+SLACK_CHANNEL_ID = os.environ["C08UFGTUXV1"]
 OPENROUTER_API_KEY = os.environ["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"]
 
 # Yapay zeka mesajı üret
