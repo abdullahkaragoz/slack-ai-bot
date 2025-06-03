@@ -3,11 +3,9 @@ import os
 import json
 import random
 
-# API anahtarları
 SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
 SLACK_CHANNEL_ID = os.environ["SLACK_CHANNEL_ID"]
 
-# JSON dosyasının yolu
 JOKES_JSON_PATH = "gunaydin_esprileri.json"
 
 def load_jokes_from_file(path):
