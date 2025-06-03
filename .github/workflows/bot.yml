@@ -2,7 +2,7 @@ name: Free AI Slack Bot
 
 on:
   schedule:
-    # Hafta içi her gün saat 05:00 UTC (Türkiye saatiyle 08:00)
+    # Hafta içi her gün saat 05:00 UTC (Türkiye saatiyle sabah 08:00)
     - cron: "0 5 * * 1-5"
   workflow_dispatch:
 
